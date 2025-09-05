@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do Web App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      margin-top: 20px;
+      color: #333;
+    }
+
+    p {
+      color: #555;
+      margin-top: -5px;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+      width: 400px;
+      max-width: 90%;
+      margin-bottom: 30px;
+    }
+
+    .input-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    input, button {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    h2 {
+      margin-top: 20px;
+      color: #444;
+      font-size: 18px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fafafa;
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    .completed {
+      text-decoration: line-through;
+      color: gray;
+    }
+
+    .task-controls button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      margin-left: 5px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .task-controls button:hover {
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <h1>📝 To-Do App</h1>
+  <p>Organize your tasks easily and stay productive.</p>
+
+  <div class="container">
+    <div class="input-section">
+      <input type="text" id="taskInput" placeholder="Enter task">
+      <input type="datetime-local" id="taskDate">
+      <button onclick="addTask()">Add Task</button>
+    </div>
+
+    <h2>📋 All Tasks</h2>
+    <ul id="taskList"></ul>
+
+    <h2>✅ Completed Tasks</h2>
+    <ul id="completedList"></ul>
+  </div>
+
+  <script>
+    let taskList = document.getElementById("taskList");
+    let completedList = document.getElementById("completedList");
+
+    function addTask() {
+      let taskInput = document.getElementById("taskInput");
+      let taskDate = document.getElementById("taskDate");
+
+      if (taskInput.value.trim() === "") {
+        alert("Please enter a task!");
+        return;
+      }
+
+      let li = document.createElement("li");
+
+      let span = document.createElement("span");
+      span.textContent = taskInput.value + (taskDate.value ? " - " + taskDate.value.replace("T", " ") : "");
+      li.appendChild(span);
+
+      let controls = document.createElement("div");
+      controls.classList.add("task-controls");
+
+      let completeBtn = document.createElement("button");
+      completeBtn.innerHTML = "✔";
+      completeBtn.onclick = function () {
+        span.classList.add("completed");
+        completedList.appendChild(li);
+        completeBtn.remove(); // remove complete button once completed
+      };
+
+      let editBtn = document.createElement("button");
+      editBtn.innerHTML = "✏";
+      editBtn.onclick = function () {
+        let newTask = prompt("Edit task:", span.textContent.split(" - ")[0]);
+        if (newTask !== null) {
+          span.textContent = newTask + (taskDate.value ? " - " + taskDate.value.replace("T", " ") : "");
+        }
+      };
+
+      let deleteBtn = document.createElement("button");
+      deleteBtn.innerHTML = "🗑";
+      deleteBtn.onclick = function () {
+        li.remove();
+      };
+
+      controls.appendChild(completeBtn);
+      controls.appendChild(editBtn);
+      controls.appendChild(deleteBtn);
+      li.appendChild(controls);
+
+      taskList.appendChild(li);
+
+      taskInput.value = "";
+      taskDate.value = "";
+    }
+  </script>
+</body>
+</html>
